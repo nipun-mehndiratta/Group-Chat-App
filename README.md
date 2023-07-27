@@ -27,7 +27,7 @@ npm install
 cd ../backend
 npm install
 Database Configuration
-Replace <username>, <password>, and <cluster-url> with your actual MongoDB Atlas credentials.
+Replace username, password, and cluster-url with your actual MongoDB Atlas credentials.
 
 Create a .env file for secret key used for authentication:
 For ex: SECRET_KEY=secre8
