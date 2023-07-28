@@ -19,7 +19,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://userid:password@cluster0.psrmrly.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true, dbName: "chatApp" });
+mongoose.connect('mongodb+srv://id:password@cluster0.psrmrly.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true, dbName: "chatApp" });
 
 const db = mongoose.connection;  
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));  
@@ -66,7 +66,7 @@ app.post('/api/login', async (req, res) => {
     // Create a JWT token with user ID as the payload
     const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '1h' });
     
-    res.status(200).json({ message: 'Login successful.', token, userId: user._id });
+    res.status(200).json({ message: 'Login successful.', token, userId: user._id }); 
   } catch (error) {
     res.status(500).json({ message: 'Could not log in.' });
   }
@@ -75,31 +75,6 @@ app.post('/api/login', async (req, res) => {
 // Real-time chat using Socket.io
 io.on('connection', (socket) => {  
   console.log('user connected');
-
-  socket.on('newMessage', async (data) => {
-    const { userId, text } = data;
-    if (!userId || !text) {
-      return;
-    }
-
-    try {
-      const user = await User.findById(userId);
-
-      if (!user) {
-        return;
-      }
-
-      const newMessage = new Message({
-        userId: user,
-        text: text,
-      });
-
-      await newMessage.save();
-      io.emit('messageReceived', newMessage);
-    } catch (error) {
-      console.error('Error saving message:', error);
-    }
-  });
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
